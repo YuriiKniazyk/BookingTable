@@ -1,0 +1,18 @@
+<h1 id="tableLabel">Restaurant tables</h1>
+
+<p *ngIf="!tables"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="tables">
+  <thead>
+    <tr>
+      <th>Count of guest</th>
+      <th>Table number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let table of tables">
+      <td>{{ table.userCount}}</td>
+      <td>{{ table.tableNumber}}</td>
+    </tr>
+  </tbody>
+</table>
