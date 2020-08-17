@@ -1,0 +1,16 @@
+<h1 id="tableLabel">Restaurant tables</h1>
+
+<p *ngIf="!tables"><em>Loading...</em></p>
+
+<table *ngIf="tables">
+  <tr>
+    <th>Count of guest</th>
+    <th>Table number</th>
+    <th></th>
+  </tr>
+  <tr *ngFor="let table of tables">
+    <td>{{ table.userCount}}</td>
+    <td>{{ table.tableNumber}}</td>
+    <td><a class="nav-link text-dark" [routerLink]="['/reserve', table.id]">Make reserve</a></td>
+  </tr>
+</table>
