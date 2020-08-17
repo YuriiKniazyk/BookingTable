@@ -11,6 +11,6 @@
   <tr *ngFor="let table of tables">
     <td>{{ table.userCount}}</td>
     <td>{{ table.tableNumber}}</td>
-    <td><a class="nav-link text-dark" [routerLink]="['/reserve', table.id]">Make reserve</a></td>
+    <td><a [routerLink]="['/reserve', table.id]">Make reserve</a></td>
   </tr>
 </table>

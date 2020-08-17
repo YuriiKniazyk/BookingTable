@@ -7,15 +7,12 @@
     <th>Booking start time</th>
     <th>Booking duration</th>
     <th>Number of guests</th>
+    <th></th>
   </tr>
   <tr *ngFor="let order of orders">
-    <td>Alfreds Futterkiste</td>
-    <td>Maria Anders</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <!--<td>{{ order.dateStart }}</td>
-    <td>{{ order.timeOfBooking }}</td>
-    <td>{{ order.countUser }}</td>-->
+    <td>{{ order.dateStart }}</td>
+    <td>{{ order.timeOfBooking }} hour</td>
+    <td>{{ order.countUser }}</td>
+    <td><a (click)="this.cancelled(order.id)">Cancelled</a></td>
   </tr>
 </table>

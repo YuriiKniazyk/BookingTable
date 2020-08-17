@@ -6,16 +6,25 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './orders.component.html'
 })
 export class OrdersComponent {
-  public orders: Order[];
+  public orders: IOrder[];
+  public baseUrl: string;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<Order[]>(baseUrl + 'api/table').subscribe(result => {
+  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    this.baseUrl = baseUrl;
+
+    http.get<IOrder[]>(baseUrl + 'api/orders').subscribe(result => {
       this.orders = result;
+    }, error => console.error(error));
+  }
+
+  cancelled(id) {
+    this.http.delete(this.baseUrl + 'api/orders/' + id).subscribe(result => {
+      this.orders = this.orders.filter(order => order.id !== id);
     }, error => console.error(error));
   }
 }
 
-interface Order {
+interface IOrder {
   id: string;
   dateStart: Date;
   timeOfBooking: number;
