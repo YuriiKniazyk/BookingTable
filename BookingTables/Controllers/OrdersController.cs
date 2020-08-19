@@ -101,7 +101,7 @@ namespace BookingTables.Controllers
             await _context.SaveChangesAsync();
             var user = await _context.Users.Where(i => i.Id == CurrentUserId.ToString()).FirstOrDefaultAsync();
 
-            await _emailService.SendEmailAsync(user.Email, "Your table was booking", $"Dear {user.UserName}, your table was booking............");
+            await _emailService.SendEmailAsync(user.Email, "Your table was booking", $"Dear {user.UserName}, your table was booked on {order.DateStart} for {order.TimeOfBooking} hour. We look forward to seeing you at this time.");
             
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }

@@ -31,15 +31,7 @@ export class ReserveComponent implements OnInit {
 
   reserve() {
     this.http.post(this.baseUrl + 'api/orders', this.order).subscribe((data) => {
-      this.order = {
-        userName: '',
-        phoneNumber: '',
-        email: '',
-        dateStart: '',
-        timeOfBooking: 0,
-        countUser: 0,
-        tableId: ''
-      };
+      this.router.navigate(['/orders']);
     }, error => console.error(error));
   }
 

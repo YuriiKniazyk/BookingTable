@@ -12,7 +12,7 @@ namespace BookingTables.Service
     {
         public async Task SendEmailAsync(string email, string subject, string message)
         {
-            var apiKey = "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";
+            var apiKey = "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";
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("yk0841590@gmail.com", "Booking Table");
             var to = new EmailAddress(email);
