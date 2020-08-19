@@ -5,18 +5,15 @@
     </div>
     <div class="item">
       <p>Name</p>
-      <div class="name-item">
-        <input type="text" name="fname"  placeholder="First" />
-        <input type="text" name="lname"  placeholder="Last" />
-      </div>
+        <input type="text" name="userName" [(ngModel)]="order.userName" placeholder="Name" />
     </div>
     <div class="item">
       <p>Email</p>
-      <input type="email"  name="email" />
+      <input type="email"  name="email" [(ngModel)]="order.email"/>
     </div>
     <div class="item">
       <p>Phone</p>
-      <input type="text" name="phone"  placeholder="### ### ####" />
+      <input type="text" name="phoneNumber" [(ngModel)]="order.phoneNumber" placeholder="### ### ####" />
     </div>
     <div class="item">
       <p>Reservation Date</p>

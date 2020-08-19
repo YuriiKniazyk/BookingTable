@@ -7,32 +7,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BookingTables.Data;
 using BookingTables.Models;
+using BookingTables.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingTables.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrdersController : ControllerBase
+    public class OrdersController : BaseController
     {
         private readonly ApplicationDbContext _context;
-
-        public OrdersController(ApplicationDbContext context)
+        private readonly IEmailService _emailService;
+        public OrdersController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         // GET: api/Orders
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.Where(i => i.UserId == CurrentUserId ).ToListAsync();
         }
 
         // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(Guid id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.Where(i => i.UserId == CurrentUserId && i.Id == id).FirstOrDefaultAsync();
 
             if (order == null)
             {
@@ -49,6 +53,11 @@ namespace BookingTables.Controllers
         public async Task<IActionResult> PutOrder(Guid id, Order order)
         {
             if (id != order.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!await _context.Orders.AnyAsync(i => i.UserId == CurrentUserId && i.Id == id))
             {
                 return BadRequest();
             }
@@ -80,9 +89,20 @@ namespace BookingTables.Controllers
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
+            order.UserId = CurrentUserId;
+            //var dateEnd = order.DateStart.AddHours(order.TimeOfBooking);
+
+            //if (await _context.Orders.AnyAsync(i => i.DateStart >= order.DateStart &&   ))
+            //{
+                
+            //}
+
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
+            var user = await _context.Users.Where(i => i.Id == CurrentUserId.ToString()).FirstOrDefaultAsync();
 
+            await _emailService.SendEmailAsync(user.Email, "Your table was booking", $"Dear {user.UserName}, your table was booking............");
+            
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
 
@@ -91,7 +111,13 @@ namespace BookingTables.Controllers
         public async Task<ActionResult<Order>> DeleteOrder(Guid id)
         {
             var order = await _context.Orders.FindAsync(id);
+
             if (order == null)
+            {
+                return NotFound();
+            }
+
+            if (order.UserId != CurrentUserId)
             {
                 return NotFound();
             }

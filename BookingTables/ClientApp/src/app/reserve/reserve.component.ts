@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 
@@ -7,8 +7,12 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
   templateUrl: './reserve.component.html',
   styleUrls: ['./reserve.component.css']
 })
-export class ReserveComponent {
+export class ReserveComponent implements OnInit {
+
   public order = {
+    userName: '',
+    phoneNumber: '',
+    email: '',
     dateStart: '',
     timeOfBooking: 0,
     countUser: 0,
@@ -28,12 +32,31 @@ export class ReserveComponent {
   reserve() {
     this.http.post(this.baseUrl + 'api/orders', this.order).subscribe((data) => {
       this.order = {
+        userName: '',
+        phoneNumber: '',
+        email: '',
         dateStart: '',
         timeOfBooking: 0,
         countUser: 0,
         tableId: ''
       };
     }, error => console.error(error));
-    console.log('user', this.order);
   }
+
+
+  ngOnInit(): void {
+    this.http.get<IUser>(this.baseUrl + 'api/user/current').subscribe((data) => {
+      this.order.userName = data.userName;
+      this.order.phoneNumber = data.phoneNumber;
+      this.order.email = data.email;
+
+    }, error => console.error(error));
+  }
+
+}
+
+interface IUser{
+  userName: string;
+  phoneNumber: string;
+  email: string;
 }
